@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+    <title>Extemporay</title>
+    <link rel="stylesheet" type="text/css" href="extemporay.css">
+    <link rel="stylesheet" type="text/css" href="paren-soup-light.css">
+    <script type="text/javascript">
+        function changeCSS(cssFile, cssLinkIndex) {
+            var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+            var newlink = document.createElement("link");
+            newlink.setAttribute("rel", "stylesheet");
+            newlink.setAttribute("type", "text/css");
+            newlink.setAttribute("href", cssFile);
+            document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+        }
+    </script>
+</head>
+<body>
+<h1>Extemporay vs Doctor Seuss</h1>
+<div class="paren-soup">
+    <div class="instarepl"></div>
+    <div class="content" contenteditable="true">;; Shape / format of the quotes
+(ns extemporay.quotes)
+
+(def qs [[{:pronoun "I"} {:verb-present "like"} {:adjective "green"} {:noun-plural "eggs"} {:conjunction "and"} {:noun-plural "ham"}]
+[{:pronoun "You"} {:verb-present "are"} {:pronoun "you"} {:punctuation :full-stop} {:verb-present "Isn't"} {:pronoun "that"} {:adjective "pleasant"}]
+[{:adverb "Sometimes"} {:definite-article "the"} {:noun-plural "questions"} {:verb-present "are"} {:adjective "complicated"} {:conjunction "and"} {:definite-article "the"} {:noun-plural "answers"} {:verb-present "are"} {:adjective "simple"}]
+[{:verb-present "Don't"} {:verb-present "cry"} {:conjunction "because"} {:definite-article "it's"} {:noun-plural "over"} {:punctuation :full-stop} {:verb-present "Smile"} {:conjunction "because"} {:definite-article "it"} {:verb-past "happened"}]])] )
+
+;; Shape / format of the replacements
+(ns extemporay.replacements)
+
+(def l33t {:bad {:noun "n00b" :noun-plural "n00bs" :adjective "n00b13" :verb-present "n00b" :verb-past "n00bd"}
+:very-bad {:noun "h4x0r" :noun-plural "h4x0rs" :adjective "l33t" :verb-present "h4x" :verb-past "h4xd"}
+:super-bad {:noun "pwnz0r" :noun-plural "pwnz0rs" :adjective "pwn13" :verb-present "pwn" :verb-past "pwnd"}
+:the-worst {:noun "suxx0r" :noun-plural "suxx0rs" :adjective "suxx13" :verb-present "suxx" :verb-past "suxxd"}})])
+
+(def badness-degrees [:bad :very-bad :super-bad :the-worst])
+(def replacement-parts [:noun :noun-plural :adjective :verb-present :verb-past])
+(def punctuation {:full-stop "." :comma ","})
+
+(ns extemporay.repl (:require [extemporay.quotes :as quotes]
+        [extemporay.replacements :as replacements]
+        [clojure.string :as string]
+        [clojure.set :as set]))
+
+(defn words
+"Return the words from a given quotation"
+[quotation punctuation]
+(map (fn [word]
+(if (keyword? word)
+(get punctuation word)
+word)) (flatten (map vals quotation))))
+
+(defn syntax
+"Return the syntax of a given quotation"
+[quotation]
+(flatten (map keys quotation)))
+
+(defn n-rand-nth
+"Find n distinct, random elements from coll"
+[n coll]
+(let [idxs (take n (distinct (repeatedly (partial rand-int (count coll)))))]
+(map (partial nth coll) idxs)))
+
+(defn n-parts
+"Find n distinct parts that are in both the syntax and the replacement parts"
+[n syntax replacement-parts]
+(let [keywords (vec (set/intersection syntax replacement-parts))]
+(n-rand-nth n keywords)))
+
+(defn syntax-match-rand-nth
+"rand-nth of indexes where a part is matched in a list of syntax-parts"
+[syntax-parts part]
+(rand-nth (keep-indexed (fn [i v] (when (= part v) i)) syntax-parts)))
+
+(defn quote-replace-in
+"Insert the replacements into the list of quote parts at the given positions"
+[quote-parts [[pos1 r1] [pos2 r2]]]
+(map-indexed (fn [i v] (cond
+(= i pos1) r1
+(= i pos2) r2
+:else v)) quote-parts))
+
+(defn syntax-replace
+"This seems awful"
+[replacement-parts badness-degrees replacements quotation]
+(let [quote-syntax   (syntax quotation)
+[part-1 part-2] (n-parts 2 (set quote-syntax) (set replacement-parts))
+[degree-1 degree-2] (n-rand-nth 2 badness-degrees)
+replacements-1 (get replacements degree-1)
+replacements-2 (get replacements degree-2)
+replace-1      (assoc {} part-1 (get replacements-1 part-1))
+replace-2      (assoc {} part-2 (get replacements-2 part-2))
+pos-1          (syntax-match-rand-nth quote-syntax part-1)
+pos-2          (syntax-match-rand-nth quote-syntax part-2)]
+
+(quote-replace-in quotation [[pos-1 replace-1] [pos-2 replace-2]])))
+
+(defn replace-all [replacements quotes]
+(map (partial syntax-replace replacements/replacement-parts replacements/badness-degrees replacements quotes)))
+
+(defn random-replacement [replacements quotes punctuation]
+(words (rand-nth (replace-all replacements quotes)) punctuation))
+
+(defn random-repeat-replacements [replacements quotes repetitions punctuation]
+(repeatedly repetitions #(random-replacement replacements quotes punctuation)))
+
+(defn format-quote [punctuation quote]
+(string/join (interpose " " (words quote punctuation))))
+
+(defn format-random-replace [replacements quotes punctuation repetitions]
+(let [qs (random-repeat-replacements replacements quotes repetitions punctuation)]
+(map (partial format-quote punctuation) qs)))
+
+(defn enhanced-quote [change-pack quote]
+(format-quote replacements/punctuation
+(syntax-replace replacements/replacement-parts replacements/badness-degrees change-pack quote)))
+
+(def speak (partial format-quote replacements/punctuation))
+(def l33t-speak (partial enhanced-quote replacements/l33t))
+
+(syntax (first quotes/qs))
+;
+;
+(words (first quotes/qs) replacements/punctuation)
+;
+(def q (first quotes/qs))
+;
+;(speak q)
+;
+;(l33t-speak q)
+;
+;(def q (second quotes/qs))
+;
+;(speak q)
+;
+;(l33t-speak q)
+;
+;(def q (rand-nth quotes/qs))
+;
+;(speak q)
+;
+;
+;(l33t-speak q)
+;
+;
+    </div>
+</div>
+<table>
+    <tr>
+        <th><a href="ex-trump.html">Word Salads</a></th>
+    </tr>
+</table>
+<script type="text/javascript" src="paren-soup.js"></script>
+<script type="text/javascript">
+    paren_soup.core.init_all();
+</script>
+</body>
+</html>

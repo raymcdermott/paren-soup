@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+<head>
+    <title>Extemporay</title>
+    <link rel="stylesheet" type="text/css" href="extemporay.css">
+    <link rel="stylesheet" type="text/css" href="paren-soup-light.css">
+    <script type="text/javascript">
+        function changeCSS(cssFile, cssLinkIndex) {
+            var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+            var newlink = document.createElement("link");
+            newlink.setAttribute("rel", "stylesheet");
+            newlink.setAttribute("type", "text/css");
+            newlink.setAttribute("href", cssFile);
+            document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+        }
+    </script>
+</head>
+<body>
+<h1>Extemporay vs Word Salads</h1>
+<div class="paren-soup">
+    <div class="instarepl"></div>
+    <div class="numbers"></div>
+    <div class="content" contenteditable="true">;; Shape / format of the quotes
+(ns extemporay.quotes)
+
+(def qs [[{:pronoun "I"} {:verb-present "like"} {:adjective "green"} {:noun-plural "eggs"} {:conjunction "and"} {:noun-plural "ham"}]
+[{:pronoun "You"} {:verb-present "are"} {:pronoun "you"} {:punctuation :full-stop} {:verb-present "Isn't"} {:pronoun "that"} {:adjective "pleasant"}]
+[{:adverb "Sometimes"} {:definite-article "the"} {:noun-plural "questions"} {:verb-present "are"} {:adjective "complicated"} {:conjunction "and"} {:definite-article "the"} {:noun-plural "answers"} {:verb-present "are"} {:adjective "simple"}]
+[{:verb-present "Don't"} {:verb-present "cry"} {:conjunction "because"} {:definite-article "it's"} {:noun-plural "over"} {:punctuation :full-stop} {:verb-present "Smile"} {:conjunction "because"} {:definite-article "it"} {:verb-past "happened"}]])] )
+
+;; Shape / format of the replacements
+(ns extemporay.replacements)
+
+(def potus {:bad {:noun "4 years" :noun-plural "8 years" :adjective "least racist" :verb-present "preside" :verb-past "presided"}
+:very-bad {:noun "fine person" :noun-plural "fine people" :adjective "huge victory" :verb-present "elect" :verb-past "elected"}
+:super-bad {:noun "fraudster" :noun-plural "fraudsters" :adjective "fake" :verb-present "defraud" :verb-past "defrauded"}
+:the-worst {:noun "covfefe" :noun-plural "covfefe" :adjective "stable genius" :verb-present "con" :verb-past "conned"}})
+
+(def badness-degrees [:bad :very-bad :super-bad :the-worst])
+(def replacement-parts [:noun :noun-plural :adjective :verb-present :verb-past])
+(def punctuation {:full-stop "." :comma ","})
+
+(ns every-day.insert-word (:require [extemporay.quotes :as quotes]
+[extemporay.replacements :as replacements]
+[clojure.string :as string]
+[clojure.set :as set]))
+
+(defn words [quotation punctuation]
+(map (fn [word]
+(if (keyword? word)
+(get punctuation word)
+word)) (flatten (map vals quotation))))
+
+(defn syntax [quotation] (flatten (map keys quotation)))
+
+(defn n-degrees [degrees n]
+(loop [kws-rand (conj #{} (rand-nth degrees))]
+(if (= (count kws-rand) n)
+(vec kws-rand)
+(recur (conj kws-rand (rand-nth degrees))))))
+
+(defn n-parts [syntax replacement-parts n]
+(let [keywords (vec (set/intersection syntax replacement-parts))]
+(loop [kws-rand (conj #{} (rand-nth keywords))]
+(if (= (count kws-rand) n)
+(vec kws-rand)
+(recur (conj kws-rand (rand-nth keywords))))))))
+
+(defn syntax-match-rand-nth [syntax part]
+(rand-nth (:positions (reduce (fn [w1 w2]
+(let [{:keys [index match positions]} w1]
+(if (= match w2)
+(assoc w1 :index (inc index) :positions (conj positions index))
+(assoc w1 :index (inc index)))))
+{:index 0 :match part :positions []} syntax))))
+
+(defn quote-replace-in [quotation replacements]
+(:output (reduce (fn [w1 w2]
+(let [{:keys [index replacements output]} w1
+replace-1 (first replacements)
+replace-2 (last replacements)]
+(cond (= (:pos replace-1) index) (assoc w1 :index (inc index)
+:output (conj output (:replacement replace-1)))
+(= (:pos replace-2) index) (assoc w1 :index (inc index)
+:output (conj output (:replacement replace-2)))
+:else (assoc w1 :index (inc index)
+:output (conj output w2)))))
+{:index 0 :replacements replacements :output []}
+quotation)))
+
+(defn syntax-replace [replacement-parts badness-degrees replacements quotation]
+(let [quote-syntax (syntax quotation)
+[part-1 part-2] (n-parts (set quote-syntax)
+(set replacement-parts) 2)
+[degree-1 degree-2] (n-degrees badness-degrees 2)
+replace-1 (assoc {} part-1 (get (get replacements degree-1) part-1))
+replace-2 (assoc {} part-2 (get (get replacements degree-2) part-2))
+pos-1 (syntax-match-rand-nth quote-syntax part-1)
+pos-2 (syntax-match-rand-nth quote-syntax part-2)]
+(quote-replace-in quotation [{:pos pos-1 :replacement replace-1} {:pos pos-2 :replacement replace-2}])))
+
+(defn replace-all [replacements quotes]
+(map (partial syntax-replace replacements/replacement-parts replacements/badness-degrees replacements quotes)))
+
+(defn random-replacement [replacements quotes punctuation]
+(words (rand-nth (replace-all replacements quotes)) punctuation))
+
+(defn random-repeat-replacements [replacements quotes repetitions punctuation]
+(repeatedly repetitions #(random-replacement replacements quotes punctuation)))
+
+(defn format-quote [punctuation quote]
+(string/join (interpose " " (words quote punctuation))))
+
+(defn format-random-replace [replacements quotes punctuation repetitions]
+(let [qs (random-repeat-replacements replacements quotes repetitions punctuation)]
+(map (partial format-quote punctuation) qs)))
+
+(defn enhanced-quote [change-pack quote]
+(format-quote replacements/punctuation
+(syntax-replace replacements/replacement-parts replacements/badness-degrees change-pack quote)))
+
+(def speak (partial format-quote replacements/punctuation))
+(def potus-speak (partial enhanced-quote replacements/potus))
+
+(syntax (first quotes/qs))
+;
+;
+(words (first quotes/qs) replacements/punctuation)
+;
+;
+(def q (first quotes/qs))
+(speak q)
+;
+;(potus-speak q)
+
+;(def q (second quotes/qs))
+;(speak q)
+;
+;(potus-speak q)
+
+;(def q (rand-nth quotes/qs))
+;
+;(speak q)
+;
+;
+;(potus-speak q)
+;
+;   </div>
+</div>
+<table>
+    <tr>
+        <th><a href="/?from-TRUMP">INDEX</a></th>
+    </tr>
+</table>
+
+<script type="text/javascript" src="paren-soup.js"></script>
+<script type="text/javascript">
+    paren_soup.core.init_all();
+</script>
+</body>
+</html>

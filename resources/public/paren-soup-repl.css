@@ -18,8 +18,8 @@
 	position: relative;
 	display: list-item;
 	padding-right: 5px;
-	min-width: 300px;
-	max-width: 300px;
+	min-width: 450px;
+	max-width: 450px;
 }
 
 .paren-soup .instarepl .result {

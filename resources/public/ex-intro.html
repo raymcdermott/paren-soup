@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <title>Extemporay</title>
+    <link rel="stylesheet" type="text/css" href="extemporay.css">
+    <link rel="stylesheet" type="text/css" href="paren-soup-light.css">
+    <script type="text/javascript">
+        function changeCSS(cssFile, cssLinkIndex) {
+            var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+            var newlink = document.createElement("link");
+            newlink.setAttribute("rel", "stylesheet");
+            newlink.setAttribute("type", "text/css");
+            newlink.setAttribute("href", cssFile);
+            document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+        }
+    </script>
+</head>
+<body>
+<h1>Introduction</h1>
+<div class="paren-soup">
+    <div class="instarepl"></div>
+    <div class="content" contenteditable="true">(def presidents ["George Washington" "John Adams" "Thomas Jefferson" "James Madison" "James Monroe" "John Quincy Adams" "Andrew Jackson" "Martin Van Buren" "William Henry Harrison" "John Tyler" "James K. Polk" "Zachary Taylor" "Millard Fillmore" "Franklin Pierce" "James Buchanan" "Abraham Lincoln" "Andrew Johnson" "Ulysses S. Grant" "Rutherford B. Hayes" "James Garfield" "Chester A. Arthur" "Grover Cleveland" "Benjamin Harrison" "Grover Cleveland" "William McKinley" "Theodore Roosevelt" "William Howard Taft" "Woodrow Wilson" "Warren G. Harding" "Calvin Coolidge" "Herbert Hoover" "Franklin D. Roosevelt" "Harry S. Truman" "Dwight D. Eisenhower" "John F. Kennedy" "Lyndon B. Johnson" "Richard M. Nixon" "Gerald R. Ford" "James Carter" "Ronald Reagan" "George H. W. Bush" "William J. Clinton" "George W. Bush" "Barack Obama" "Donald J. Trump"])
+;
+;; EuroClojure 2016
+(defmacro defjoke [pure-joke]
+(rand-nth [true (string? pure-joke) false]))
+(let [president (rand-nth presidents)]
+    (str president ". Funny? " (defjoke president)))
+;
+;; EuroClojure 2017
+{:name :epigram :jokes ["Are" "data"]}
+;
+;</div>
+</div>
+<br>
+
+<h2><a href="ex-tax.html">Next Dictionary Entry</a></h2>
+
+<script type="text/javascript" src="paren-soup.js"></script>
+<script type="text/javascript">
+    paren_soup.core.init_all();
+</script>
+</body>
+</html>
+
+

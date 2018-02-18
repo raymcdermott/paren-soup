@@ -16,26 +16,34 @@
     </script>
 </head>
 <body>
-<h1>Program</h1>
+<h1>Hickey Tax / Richionary</h1>
 <div class="paren-soup">
     <div class="instarepl"></div>
-    <div class="content" contenteditable="true">(defn up-next [preference options]
-(filter
-  #(clojure.string/starts-with? (name %) preference)
-    options))
+    <div class="content" contenteditable="true">(defn hard-to-pronounce? [word] (or (clojure.string/ends-with? (name word) "re") (clojure.string/ends-with? (name word) "am")))
+(def obscure? (partial contains?
+#{:clojure :eduction :monoid :transduce :extempore :epigram :extemporay}))
 ;
-(up-next "jokes" [:jokes :repl-repl :paren-soup
-        :intro :extemporay :shapes]))
-;;;</div>
+(symbol (name :epigram))
+(obscure? :epigram)
+(hard-to-pronounce? :epigram)
+;
+(symbol (name :clojure))
+(obscure? :clojure)
+(hard-to-pronounce? :clojure)
+;
+(symbol (name :extempore))
+(obscure? :extempore)
+(hard-to-pronounce? :extempore)
+;
+(symbol (name :extemporay))
+(obscure? :extemporay)
+(hard-to-pronounce? :extemporay)
+;
+    </div>
 </div>
-<br>
 <table>
     <tr>
-        <th><a href="ex-jokes.html">Jokes</a></th>
-        <th><a href="ex-repl.html">REPL REPL</a></th>
-        <th><a href="ex-intro.html">Intro</a></th>
-        <th><a href="ex-temporay.html">ExtempoRay</a></th>
-        <th><a href="ex-shapes.html">Shapes</a></th>
+        <th><a href="/?from-INTRO">INDEX</a></th>
     </tr>
 </table>
 <script type="text/javascript" src="paren-soup.js"></script>

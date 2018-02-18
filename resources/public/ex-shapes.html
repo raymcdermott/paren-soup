@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Extemporay</title>
-    <link rel="stylesheet" type="text/css" href="extemporay.css">
     <link rel="stylesheet" type="text/css" href="paren-soup-light.css">
     <script type="text/javascript">
         function changeCSS(cssFile, cssLinkIndex) {
@@ -16,28 +15,25 @@
     </script>
 </head>
 <body>
-<h1>Program</h1>
+<h1>Shape shifting</h1>
 <div class="paren-soup">
     <div class="instarepl"></div>
-    <div class="content" contenteditable="true">(defn up-next [preference options]
-(filter
-  #(clojure.string/starts-with? (name %) preference)
-    options))
-;
-(up-next "jokes" [:jokes :repl-repl :paren-soup
-        :intro :extemporay :shapes]))
-;;;</div>
+    <div class="numbers"></div>
+    <div class="content" contenteditable="true">;;
+        ; One word
+
+        ; One word - anti-FP: relies on co-effects (time and place)
+
+        ; Mis-spelled words - testing the gap between computers / humans
+
+        ; Two words
+
+        ; Setup / punch lines
+
+        ; Tricky - Callbacks - anti-FP: rely on order
+
+    </div>
 </div>
-<br>
-<table>
-    <tr>
-        <th><a href="ex-jokes.html">Jokes</a></th>
-        <th><a href="ex-repl.html">REPL REPL</a></th>
-        <th><a href="ex-intro.html">Intro</a></th>
-        <th><a href="ex-temporay.html">ExtempoRay</a></th>
-        <th><a href="ex-shapes.html">Shapes</a></th>
-    </tr>
-</table>
 <script type="text/javascript" src="paren-soup.js"></script>
 <script type="text/javascript">
     paren_soup.core.init_all();

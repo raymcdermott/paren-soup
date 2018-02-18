@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+    <title>Extemporay</title>
+    <link rel="stylesheet" type="text/css" href="extemporay.css">
+    <link rel="stylesheet" type="text/css" href="paren-soup-repl.css">
+    <script type="text/javascript">
+        function changeCSS(cssFile, cssLinkIndex) {
+            var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+            var newlink = document.createElement("link");
+            newlink.setAttribute("rel", "stylesheet");
+            newlink.setAttribute("type", "text/css");
+            newlink.setAttribute("href", cssFile);
+            document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+        }
+    </script>
+</head>
+<body>
+<h1>REPL REPL</h1>
+<div class="paren-soup">
+    <div class="instarepl"></div>
+    <div class="content" contenteditable="true">(def repl-repl {:curl     "You've got your Clojure via curl" :care     "She don't care if you're a boy or a girl" :parens   "Hey babe, your parens alright" :code     "Hey babe, let's code tonight" :lisp     "You like LISP, and a function call" :maps     "We like maps and they look divine"
+:figwheel "You love figwheel when you're coding hard" :feedback "You want feedback, you want it fast" :wrong    "They put you down, they say I'm wrong" :tacky    "You tacky thing, you put them on" :term     "REPL REPL, you've a term address" :font     "REPL REPL, your font is a mess" :know     "REPL REPL, how could they know?" :love    "Hot tramp, I love you so!"})
+
+(:curl repl-repl)
+(:care repl-repl)
+(:parens repl-repl)
+(:code repl-repl)
+(:lisp repl-repl)
+(:maps repl-repl)
+(:figwheel repl-repl)
+(:feedback repl-repl)
+(:wrong repl-repl)
+(:tacky repl-repl)
+;
+(:term repl-repl)
+(:font repl-repl)
+(:know repl-repl)
+(:love repl-repl)
+;    </div>
+</div>
+<br>
+<table>
+    <tr>
+        <th><a href="/?from-REPL-REPL">INDEX</a></th>
+    </tr>
+</table>
+
+
+<script type="text/javascript" src="paren-soup.js"></script>
+<script type="text/javascript">
+    paren_soup.core.init_all();
+</script>
+</body>
+</html>

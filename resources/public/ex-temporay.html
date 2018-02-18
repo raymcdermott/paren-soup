@@ -16,28 +16,37 @@
     </script>
 </head>
 <body>
-<h1>Program</h1>
+<h1>Epigram 2017 - needed to be fixed</h1>
 <div class="paren-soup">
     <div class="instarepl"></div>
-    <div class="content" contenteditable="true">(defn up-next [preference options]
-(filter
-  #(clojure.string/starts-with? (name %) preference)
-    options))
+    <div class="content" contenteditable="true">(def controversial? (partial empty?))
+(def controversy {:woody "Not only is there no God, but try getting a plumber on weekends." :epigram "Not only is there no ass God, but try getting a plumber on carrot weekends."})
 ;
-(up-next "jokes" [:jokes :repl-repl :paren-soup
-        :intro :extemporay :shapes]))
-;;;</div>
+(:woody controversy)
+;
+;
+(:epigram controversy)
+;
+;
+;(controversial? "Woody Allen? Maybe, allegedly")
+;(controversial? "Grammar? Words inserted randomly")
+;(controversial? "Comedy? Most outputs not funny")</div>
 </div>
 <br>
+<div class="paren-soup">
+    <div class="instarepl"></div>
+    <div class="content" contenteditable="true">(def controversial? (partial string?))
+;
+;(controversial? "Ass and carrot could offend "passers by"")</div>
+</div>
+
 <table>
     <tr>
-        <th><a href="ex-jokes.html">Jokes</a></th>
-        <th><a href="ex-repl.html">REPL REPL</a></th>
-        <th><a href="ex-intro.html">Intro</a></th>
-        <th><a href="ex-temporay.html">ExtempoRay</a></th>
-        <th><a href="ex-shapes.html">Shapes</a></th>
+        <th><a href="ex-holy.html">Improvements via ExtempoRay</a></th>
     </tr>
 </table>
+
+
 <script type="text/javascript" src="paren-soup.js"></script>
 <script type="text/javascript">
     paren_soup.core.init_all();
